@@ -1,76 +1,27 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>01_canvas</title>
-    <style>
-      canvas {
-        border: 1px dotted gray;
-        margin: 10px auto;
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="canvas1" width="300" height="300"></canvas>
-    <script>
-      // 要素の取得
-      const canvas1 = document.getElementById("canvas1");
-      const ctx1 = canvas1.getContext("2d");
-
-      // ★図形を描画
-
-      // ①矩形
-      ctx1.fillStyle = "red";              // 塗り色を指定
-      ctx1.fillRect(0, 0, 50, 50);       // 矩形を描画(x座標,y座標,幅,高さ)
-      ctx1.fillRect(50, 50, 50, 50);       // 矩形を描画(x座標,y座標,幅,高さ)
-
-      // ②多角形
-      ctx1.beginPath();                    // パスの開始
-      ctx1.moveTo(150, 0);               // 開始点を設定(x,y)
-      ctx1.lineTo(100, 100);               // 頂点を設定(x,y)
-      ctx1.lineTo(200, 100);               // 頂点を設定(x,y)
-      ctx1.closePath();                    // パスの終了(開始点へ戻る)
-      ctx1.fillStyle = "orange";
-      ctx1.fill();                         // パス内を塗りつぶす
-
-      // ③直線
-      ctx1.beginPath();
-      ctx1.moveTo(200, 0);
-      ctx1.lineTo(300, 100);
-      ctx1.lineWidth = 3;                  // 枠線の太さ
-      ctx1.strokeStyle = "yellow";         // 枠線のいろ
-      ctx1.stroke();                       // パスに枠線を引く
-
-      // ④円弧
-      let angle1 = 45;                     // 開始角は45度
-      let angle2 = 315;                    // 終了角は315度
-      let rad1 = angle1 / 360 * 2 * Math.PI;   // 45度をラジアンに変換
-      let rad2 = angle2 / 360 * 2 * Math.PI;   // 315度をラジアンに変換
-
-      ctx1.beginPath();
-      ctx1.moveTo(100, 200);
-      ctx1.arc(100, 200, 50, rad1, rad2, false); // 円弧描画(x,y,半径,開始角,終了角,方向)
-      ctx1.closePath();
-      ctx1.fillStyle = "green";
-      ctx1.fill();
-      ctx1.lineWidth = 3;
-      ctx1.strokeStyle = "black";
-      ctx1.stroke();
-
-      // ⑤画像(静止)
-      // ※ image1.png は配布フォルダの画像を同じ場所に置いてください。
-      const img1 = new Image();            // 画像のオブジェクト(もの)を生成
-      img1.src = "image1.png";             // 画像ファイルを指定(src：ソース)
-      img1.onload = () => {
-        ctx1.drawImage(img1, 150, 150, 100, 100); // 画像描画(オブジェクト,x,y,幅,高さ)
-      }
-
-      // ⑥文字
-      ctx1.fillStyle = "blue";
-      ctx1.font = "40px serif";            // 文字の大きさとフォントを設定
-      ctx1.fillText("Canvas Game", 0, 300);      // 文字を描画("文字列",x,y)
-
-    </script>
-  </body>
-</html>
+<head>
+  <meta charset="utf-8">
+  <title>Canvas Game</title>
+</head>
+<body>
+  <h1>Canvas Game</h1>
+  <ul>
+    <li><a href="01_canvas/">01_canvas</a></li>
+    <li><a href="02_function/">02_function</a></li>
+    <li><a href="03-01_setinterval/">03-01_setinterval</a></li>
+    <li><a href="03-02_raf/">03-02_faf</a></li>
+    <li><a href="04-01_mouse/">04-01_mouse</a></li>
+    <li><a href="04-02_touch/">04-02_touch</a></li>
+    <li><a href="04-03_control/">04-03_control</a></li>
+    <li><a href="05-01~02_game1/">05-01~02_game1</a></li>
+    <li><a href="05-03~05_game2_faf/">05-03~05_game2_faf</a></li>
+    <li><a href="06-01_css/">06-01_css</a></li>
+    <li><a href="06-02_sound/">06-02_sound</a></li>
+    <li><a href="07-01_whackamole/">07-01_whackamole</a></li>
+    <li><a href="07-02_maze/">07-02_maze</a></li>
+    <li><a href="07-03_parabola/">07-03_parabola </a></li>
+    <li><a href="07-04_invader/">07-04_invader</a></li>
+    <li><a href="07-05_tennis/">07-05_tennis</a></li>
+    <li><a href="07-06_breakout/">07-06_breakout</a></li>
+  </ul>
+</body>
