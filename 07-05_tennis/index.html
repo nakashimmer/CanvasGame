@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>07-05_テニスゲーム</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+      }
+
+      canvas {
+        border: 1px dotted gray;
+        margin: 10px auto;
+        display: block;
+        background: #0b3d2e;
+      }
+
+      p.help {
+        color: #666;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>テニスゲーム</h2>
+    <p class="help">マウスで下のバー(あなた)を左右に動かそう。上のCPUと打ち合う。</p>
+    <canvas id="canvas1" width="400" height="400"></canvas>
+    <script>
+      const canvas1 = document.getElementById("canvas1");
+      const ctx1 = canvas1.getContext("2d");
+
+      // ①初期設定
+      const player1 = { x: 200, y: 380, w: 80, h: 12, color: "skyblue" }; // 自分（下）
+      const cpu1 = { x: 200, y: 20, w: 80, h: 12, color: "orange" };  // CPU（上）
+      const ball1 = { x: 200, y: 200, r: 8, dx: 1.5, dy: 1.5, color: "pink" };
+      const score1 = { you: 0, cpu: 0 };
+
+      let lastTime = 0;
+
+      // ②イベント処理
+      canvas1.addEventListener("mousemove", (e) => {
+        const rect = e.target.getBoundingClientRect();
+        player1.x = e.clientX - rect.left;
+      });
+
+      // ③関数の定義
+      function clearDraw() {
+        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+      }
+      function rectDraw(rect) {
+        ctx1.fillStyle = rect.color;
+        ctx1.fillRect(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.w, rect.h);
+      }
+      function ballDraw(ball) {
+        ctx1.beginPath();
+        ctx1.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI, false);
+        ctx1.closePath();
+        ctx1.fillStyle = ball.color;
+        ctx1.fill();
+      }
+      function scoreDraw(score) {
+        ctx1.fillStyle = "white";
+        ctx1.font = "20px sans-serif";
+        ctx1.fillText("CPU: " + score.cpu, 10, 200 - 40);
+        ctx1.fillText("YOU: " + score.you, 10, 200 + 50);
+      }
+
+      // CPUがボールを追いかける（本文には無い新規要素：目標へゆっくり近づく）
+      function cpuCal(cpu, ball, deltaTime) {
+        const speed = 2.2 * deltaTime / 50;
+        if (cpu.x < ball.x - 5) { cpu.x += speed; }
+        else if (cpu.x > ball.x + 5) { cpu.x -= speed; }
+      }
+
+      // ボールの移動・壁反射・パドル反射・得点判定
+      function ballCal(canvas, ball, player, cpu, score, deltaTime) {
+        ball.x += ball.dx * deltaTime / 50;
+        ball.y += ball.dy * deltaTime / 50;
+
+        // 左右の壁で反射
+        if (ball.x - ball.r < 0 || canvas.width < ball.x + ball.r) {
+          ball.dx *= -1;
+        }
+
+        // 自分のパドルとの当たり判定
+        if (ball.dy > 0 &&
+          Math.abs(ball.y - player.y) < player.h / 2 + ball.r &&
+          Math.abs(ball.x - player.x) < player.w / 2 + ball.r) {
+          ball.dy *= -1;
+        }
+
+        // CPUのパドルとの当たり判定
+        if (ball.dy < 0 &&
+          Math.abs(ball.y - cpu.y) < cpu.h / 2 + ball.r &&
+          Math.abs(ball.x - cpu.x) < cpu.w / 2 + ball.r) {
+          ball.dy *= -1;
+        }
+
+        // 得点判定（画面の上下を出たら）
+        if (ball.y > canvas.height) {
+          score.cpu++;
+          ball.x = 200; ball.y = 200; ball.dy = -1.5;
+        }
+        if (ball.y < 0) {
+          score.you++;
+          ball.x = 200; ball.y = 200; ball.dy = 1.5;
+        }
+      }
+
+      // ④ゲームループ
+      function game1(timestamp) {
+        if (lastTime === 0) { lastTime = timestamp; }
+        const deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+
+        cpuCal(cpu1, ball1, deltaTime);
+        ballCal(canvas1, ball1, player1, cpu1, score1, deltaTime);
+
+        clearDraw();
+        rectDraw(player1);
+        rectDraw(cpu1);
+        ballDraw(ball1);
+        scoreDraw(score1);
+
+        requestAnimationFrame(game1);
+      }
+      requestAnimationFrame(game1);
+    </script>
+  </body>
+</html>

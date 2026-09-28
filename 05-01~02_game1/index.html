@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>05-01~02_game1</title>
+    <style>
+      canvas {
+        border: 1px dotted gray;
+        margin: 10px auto;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas1" width="400" height="400"></canvas>
+    <script>
+      //① 初期設定===============================
+      // 要素の取得
+      const canvas1 = document.getElementById("canvas1");
+      const ctx1 = canvas1.getContext("2d");
+
+      // 初期値
+      const target1 = { x: 200, y: 100, w: 50, h: 50, dir: 1, color: "orange" }; //ターゲット
+      const player1 = { x: 200, y: 300, w: 50, h: 50, color: "skyblue" };       //プレイヤー
+      const ball1 = { x: -10, y: -10, w: 5, h: 5, color: "pink" };               //ボール
+      const point1 = { value: 0 };                                          //得点
+
+      //②実行====================================
+      setInterval(loop, 50);
+
+      function loop() {
+        //関数の実行(5-1-4)
+        clearDraw(canvas1);
+        rectDraw(target1);
+        rectDraw(player1);
+        rectDraw(ball1);
+        pointDraw(point1)
+        rectCal(canvas1, target1, ball1, point1);
+      }
+
+      //イベント処理定義==================================
+      canvas1.addEventListener(
+        "mousedown",
+        (e) => {
+          ball1.x = player1.x;
+          ball1.y = player1.y;
+        }
+      );
+
+      canvas1.addEventListener(
+        "mousemove",
+        (e) => {
+          const rect = e.target.getBoundingClientRect();
+          player1.x = e.clientX - rect.left;
+        }
+      );
+
+      //関数定義===============================
+      function clearDraw(canvas) {
+        ctx1.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function rectDraw(rect) {
+        ctx1.fillStyle = rect.color;
+        ctx1.fillRect(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.w, rect.h);
+      }
+
+      function pointDraw(point) {
+        ctx1.fillStyle = "black";
+        ctx1.font = "20px sans-serif";
+        ctx1.fillText(point.value, 0, 400);
+      }
+
+      function rectCal(canvas, target, ball, point, audio) {
+        //移動
+        target.x += target.dir;
+        ball.y -= 5;
+
+        //壁衝突計算
+        if ((target.x < target.w / 2) || (canvas.width - target.w / 2 < target.x)) {
+          target.dir *= -1;
+        }
+
+        //ポイントゲット
+        if ((100 === ball.y) && (Math.abs(target.x - ball.x) < 25)) {
+          point.value++;
+        }
+      }
+    </script>
+  </body>
+</html>

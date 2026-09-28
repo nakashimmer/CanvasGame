@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>07-03_放物線ゲーム</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+      }
+
+      canvas {
+        border: 1px dotted gray;
+        margin: 10px auto;
+        display: block;
+        background: #eaf6ff;
+      }
+
+      p.help {
+        color: #666;
+        font-size: 13px;
+      }
+
+      .panel {
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>放物線ゲーム</h2>
+    <p class="help">角度と初速を決めて「発射」。動く的に当てよう。</p>
+    <canvas id="canvas1" width="400" height="400"></canvas>
+    <div class="panel"> 角度:<input type="range" id="angleInput" min="10" max="80" value="45"> 初速:<input type="range"
+        id="powerInput" min="8" max="25" value="17">
+      <button id="fireBtn">発射</button>
+    </div>
+    <script>
+      const canvas1 = document.getElementById("canvas1");
+      const ctx1 = canvas1.getContext("2d");
+      const groundY = 380;
+
+      // ①初期設定
+      // 的（第3章の増分の考え方で上下に往復させる）
+      const target1 = { x: 320, y: 200, w: 40, h: 40, dy: 1, color: "orange" };
+
+      // ボール（放物運動。重力は本文には無い新規要素で、dyを毎フレーム変化させる）
+      const ball1 = { x: 40, y: groundY, r: 8, vx: 0, vy: 0, flying: false, color: "pink" };
+      const gravity = 0.4;
+
+      const point1 = { value: 0 };
+      let lastTime = 0;
+
+      // ②イベント処理
+      const angleInput = document.getElementById("angleInput");
+      const powerInput = document.getElementById("powerInput");
+      document.getElementById("fireBtn").addEventListener("click", () => {
+        const angle = Number(angleInput.value);
+        const power = Number(powerInput.value);
+        const rad = angle / 180 * Math.PI; // 第1.5節と同じラジアン変換
+        ball1.x = 40;
+        ball1.y = groundY;
+        ball1.vx = power * Math.cos(rad);
+        ball1.vy = -power * Math.sin(rad);
+        ball1.flying = true;
+      });
+
+      // ③関数の定義
+      function clearDraw() {
+        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+      }
+
+      function groundDraw() {
+        ctx1.fillStyle = "#8bc48a";
+        ctx1.fillRect(0, groundY, canvas1.width, canvas1.height - groundY);
+      }
+
+      function rectDraw(rect) {
+        ctx1.fillStyle = rect.color;
+        ctx1.fillRect(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.w, rect.h);
+      }
+
+      function ballDraw(ball) {
+        ctx1.beginPath();
+        ctx1.arc(ball.x, ball.y, ball.r, 0, 2 * Math.PI, false);
+        ctx1.closePath();
+        ctx1.fillStyle = ball.color;
+        ctx1.fill();
+      }
+
+      function pointDraw(point) {
+        ctx1.fillStyle = "black";
+        ctx1.font = "20px sans-serif";
+        ctx1.fillText("得点: " + point.value, 10, 30);
+      }
+
+      // 的の上下移動（第3章のrectCalと同じ考え方）
+      function targetCal(target, deltaTime) {
+        target.y += target.dy * deltaTime / 50;
+        if ((target.y < target.h / 2 + 40) || (300 < target.y)) {
+          target.dy *= -1;
+        }
+      }
+
+      // ボールの放物運動計算（本文には無い新規要素）
+      function ballCal(ball, deltaTime) {
+        if (!ball.flying) return;
+        const t = deltaTime / 16; // 約1フレーム(16ms)を基準に正規化
+        ball.x += ball.vx * t;
+        ball.y += ball.vy * t;
+        ball.vy += gravity * t;
+
+        // 地面に着いたら失敗
+        if (ball.y > groundY) {
+          ball.flying = false;
+        }
+        // 右の壁を越えたら失敗
+        if (ball.x > canvas1.width) {
+          ball.flying = false;
+        }
+      }
+
+      // 当たり判定（Math.absを使う本文と同じ考え方）
+      function hitCheck(ball, target, point) {
+        if (!ball.flying) return;
+        if (Math.abs(ball.x - target.x) < target.w / 2 + ball.r &&
+          Math.abs(ball.y - target.y) < target.h / 2 + ball.r) {
+          point.value++;
+          ball.flying = false;
+        }
+      }
+
+      // ④ゲームループ（第5.4節と同じRAF+deltaTime）
+      function game1(timestamp) {
+        if (lastTime === 0) { lastTime = timestamp; }
+        const deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+
+        targetCal(target1, deltaTime);
+        ballCal(ball1, deltaTime);
+        hitCheck(ball1, target1, point1);
+
+        clearDraw();
+        groundDraw();
+        rectDraw(target1);
+        if (ball1.flying || ball1.y <= groundY) { ballDraw(ball1); }
+        pointDraw(point1);
+
+        requestAnimationFrame(game1);
+      }
+      requestAnimationFrame(game1);
+    </script>
+  </body>
+</html>

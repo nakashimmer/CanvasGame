@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>07-01_もぐらたたき</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+      }
+
+      canvas {
+        border: 1px dotted gray;
+        margin: 10px auto;
+        display: block;
+        background: #dff0d8;
+      }
+
+      p.help {
+        color: #666;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>もぐらたたき</h2>
+    <p class="help">制限時間内にクリックしてモグラをたたこう！</p>
+    <canvas id="canvas1" width="400" height="400"></canvas>
+    <script>
+      // 要素の取得（第1章の書き方）
+      const canvas1 = document.getElementById("canvas1");
+      const ctx1 = canvas1.getContext("2d");
+
+      // 効果音（第6章6.2と同じ考え方）
+      const seHit = new Audio("hit.mp3");
+
+      // ①穴の初期設定
+      // オブジェクト型変数（第2章）を配列にして複数管理する（本文には無い発展）
+      const holes = [];
+      const cols = 3, rows = 3, cellSize = 120, offsetX = 20, offsetY = 20;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          holes.push({
+            x: offsetX + c * cellSize + cellSize / 2,
+            y: offsetY + r * cellSize + cellSize / 2,
+            w: 80, h: 80,
+            up: false,     // モグラが出ているか
+            upTimer: 0      // 出てからの経過時間(ms)
+          });
+        }
+      }
+
+      const point1 = { value: 0 };
+      const timeLimit = { value: 30000 }; // 残り時間(ms)
+      let spawnTimer = 0;
+      let lastTime = 0;
+      let gameOver = false;
+
+      // ②イベント処理（クリックした穴にモグラがいれば得点）
+      canvas1.addEventListener("mousedown", (e) => {
+        if (gameOver) return;
+        const rect = e.target.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        holes.forEach((hole) => {
+          if (hole.up && Math.abs(mx - hole.x) < hole.w / 2 && Math.abs(my - hole.y) < hole.h / 2) {
+            hole.up = false;
+            hole.upTimer = 0;
+            point1.value++;
+            seHit.currentTime = 0; // 連続再生に対応（第6章6.2と同じ）
+            seHit.play();
+          }
+        });
+      });
+
+      // ③関数の定義
+      function holeDraw(hole) {
+        // 穴（円弧。第1.5節の考え方）
+        ctx1.beginPath();
+        ctx1.arc(hole.x, hole.y, hole.w / 2, 0, 2 * Math.PI, false);
+        ctx1.closePath();
+        ctx1.fillStyle = "#5b3a29";
+        ctx1.fill();
+
+        // モグラ（出ているときだけ描画）
+        if (hole.up) {
+          ctx1.beginPath();
+          ctx1.arc(hole.x, hole.y, hole.w / 2 - 12, 0, 2 * Math.PI, false);
+          ctx1.closePath();
+          ctx1.fillStyle = "#8d6748";
+          ctx1.fill();
+        }
+      }
+
+      function pointDraw(point) {
+        ctx1.fillStyle = "black";
+        ctx1.font = "20px sans-serif";
+        ctx1.fillText("得点: " + point.value, 10, 380);
+      }
+
+      function timeDraw(time) {
+        ctx1.fillStyle = "black";
+        ctx1.font = "20px sans-serif";
+        const sec = Math.max(0, Math.ceil(time.value / 1000));
+        ctx1.fillText("残り: " + sec + "秒", 260, 380);
+      }
+
+      // ④ game1関数（第5.4節のRAF+deltaTimeと同じ考え方）
+      function game1(timestamp) {
+        if (lastTime === 0) { lastTime = timestamp; }
+        const deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+
+        if (!gameOver) {
+          // 残り時間の更新
+          timeLimit.value -= deltaTime;
+          if (timeLimit.value <= 0) {
+            timeLimit.value = 0;
+            gameOver = true;
+          }
+
+          // モグラの出現タイミング管理（本文には無い新規要素：Math.randomでの抽選）
+          spawnTimer -= deltaTime;
+          if (spawnTimer <= 0) {
+            holes.forEach(h => { h.up = false; h.upTimer = 0; });
+            const target = holes[Math.floor(Math.random() * holes.length)];
+            target.up = true;
+            spawnTimer = 700 + Math.random() * 500;
+          }
+
+          // 出ているモグラの生存時間管理
+          holes.forEach(h => {
+            if (h.up) {
+              h.upTimer += deltaTime;
+              if (h.upTimer > 900) { h.up = false; h.upTimer = 0; }
+            }
+          });
+        }
+
+        // 描画
+        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+        holes.forEach(holeDraw);
+        pointDraw(point1);
+        timeDraw(timeLimit);
+
+        if (gameOver) {
+          ctx1.fillStyle = "red";
+          ctx1.font = "40px sans-serif";
+          ctx1.textAlign = "center";
+          ctx1.fillText("終了！", 200, 200);
+          ctx1.textAlign = "left";
+        }
+
+        requestAnimationFrame(game1);
+      }
+      requestAnimationFrame(game1);
+    </script>
+  </body>
+</html>

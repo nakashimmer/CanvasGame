@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>07-04_インベーダーゲーム</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        background: #111;
+        color: #eee;
+      }
+
+      canvas {
+        border: 1px solid #555;
+        margin: 10px auto;
+        display: block;
+        background: #000;
+      }
+
+      p.help {
+        color: #aaa;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>インベーダーゲーム</h2>
+    <p class="help">←→キーで移動、スペースキーで弾を発射。敵を全滅させよう。</p>
+    <canvas id="canvas1" width="400" height="400" tabindex="0"></canvas>
+    <script>
+      const canvas1 = document.getElementById("canvas1");
+      const ctx1 = canvas1.getContext("2d");
+
+      // ①初期設定
+      // 敵の配列（第2章のオブジェクト型変数を配列で管理。本文には無い発展）
+      const enemies = [];
+      const enemyCols = 5, enemyRows = 3;
+      const enemyStartX = 45, enemyStartY = 40, enemyGapX = 70, enemyGapY = 40;
+      for (let r = 0; r < enemyRows; r++) {
+        for (let c = 0; c < enemyCols; c++) {
+          enemies.push({
+            x: enemyStartX + c * enemyGapX,
+            y: enemyStartY + r * enemyGapY,
+            w: 40, h: 24,
+            alive: true
+          });
+        }
+      }
+      let enemyDir = 1;
+      const enemySpeed = 0.6;
+
+      const player1 = { x: 200, y: 370, w: 50, h: 14, color: "skyblue" };
+      const bullet1 = { x: -10, y: -10, w: 4, h: 12, alive: false, color: "yellow" };
+      const point1 = { value: 0 };
+      let lastTime = 0;
+      let gameOver = false;
+      let cleared = false;
+
+      // ②イベント処理（キー押下中を保持する。本文には無い新規要素）
+      let moveLeft = false, moveRight = false;
+      canvas1.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") {
+          moveLeft = true;
+        }
+        if (e.key === "ArrowRight") {
+          moveRight = true;
+        }
+        if (e.key === " ") {
+          if (!bullet1.alive && !gameOver && !cleared) {
+            bullet1.x = player1.x;
+            bullet1.y = player1.y - player1.h;
+            bullet1.alive = true;
+          }
+        }
+      }, { passive: false });
+      canvas1.addEventListener("keyup", (e) => {
+        if (e.key === "ArrowLeft") { moveLeft = false; }
+        if (e.key === "ArrowRight") { moveRight = false; }
+      });
+      canvas1.focus();
+      canvas1.addEventListener("mousedown", () => { canvas1.focus(); });
+
+      // ③関数の定義
+      function clearDraw() {
+        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+      }
+      function rectDraw(rect) {
+        ctx1.fillStyle = rect.color;
+        ctx1.fillRect(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.w, rect.h);
+      }
+      function enemyDraw(enemy) {
+        if (!enemy.alive) return;
+        ctx1.fillStyle = "#7CFF6B";
+        ctx1.fillRect(enemy.x - enemy.w / 2, enemy.y - enemy.h / 2, enemy.w, enemy.h);
+      }
+      function pointDraw(point) {
+        ctx1.fillStyle = "#eee";
+        ctx1.font = "18px sans-serif";
+        ctx1.fillText("得点: " + point.value, 10, 20);
+      }
+
+      // 敵全体の移動（第3章の壁反射の考え方をグループ全体に適用）
+      function enemyGroupCal(deltaTime) {
+        let hitWall = false;
+        enemies.forEach(en => {
+          if (!en.alive) return;
+          en.x += enemyDir * enemySpeed * deltaTime / 16;
+          if (en.x - en.w / 2 < 0 || en.x + en.w / 2 > canvas1.width) { hitWall = true; }
+        });
+        if (hitWall) {
+          enemyDir *= -1;
+          enemies.forEach(en => { if (en.alive) en.y += 16; });
+        }
+      }
+
+      // プレイヤーの移動（キーを押している間、継続して動く）
+      function playerCal(deltaTime) {
+        const speed = 4 * deltaTime / 16;
+        if (moveLeft) player1.x -= speed;
+        if (moveRight) player1.x += speed;
+        player1.x = Math.max(player1.w / 2, Math.min(canvas1.width - player1.w / 2, player1.x));
+      }
+
+      // 弾の移動と当たり判定
+      function bulletCal(deltaTime) {
+        if (!bullet1.alive) return;
+        bullet1.y -= 6 * deltaTime / 16;
+        if (bullet1.y < 0) { bullet1.alive = false; return; }
+
+        enemies.forEach(en => {
+          if (!en.alive || !bullet1.alive) return;
+          if (Math.abs(bullet1.x - en.x) < en.w / 2 + bullet1.w / 2 &&
+            Math.abs(bullet1.y - en.y) < en.h / 2 + bullet1.h / 2) {
+            en.alive = false;
+            bullet1.alive = false;
+            point1.value++;
+          }
+        });
+      }
+
+      function checkGameState() {
+        if (enemies.every(en => !en.alive)) { cleared = true; }
+        enemies.forEach(en => {
+          if (en.alive && en.y + en.h / 2 > player1.y - player1.h / 2) { gameOver = true; }
+        });
+      }
+
+      function messageDraw(text, color) {
+        ctx1.fillStyle = color;
+        ctx1.font = "36px sans-serif";
+        ctx1.textAlign = "center";
+        ctx1.fillText(text, 200, 200);
+        ctx1.textAlign = "left";
+      }
+
+      // ④ゲームループ
+      function game1(timestamp) {
+        if (lastTime === 0) { lastTime = timestamp; }
+        const deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+
+        if (!gameOver && !cleared) {
+          enemyGroupCal(deltaTime);
+          playerCal(deltaTime);
+          bulletCal(deltaTime);
+          checkGameState();
+        }
+
+        clearDraw();
+        enemies.forEach(enemyDraw);
+        rectDraw(player1);
+        if (bullet1.alive) { rectDraw(bullet1); }
+        pointDraw(point1);
+
+        if (gameOver) { messageDraw("GAME OVER", "red"); }
+        if (cleared) { messageDraw("CLEAR!", "lime"); }
+
+        requestAnimationFrame(game1);
+      }
+      requestAnimationFrame(game1);
+    </script>
+  </body>
+</html>
