@@ -51,13 +51,13 @@
       const point1 = { value: 0 };
       let lastTime = 0;
 
-      // イベント処理
+      // ②イベント処理
       const angleInput = document.getElementById("angleInput");
       const powerInput = document.getElementById("powerInput");
       document.getElementById("fireBtn").addEventListener("click", () => {
         const angle = Number(angleInput.value);
         const power = Number(powerInput.value);
-        const rad = angle / 180 * Math.PI; // 第1.5節と同じラジアン変換
+        const rad = angle / 180 * Math.PI; // 1.5と同じラジアン変換
         ball1.x = 40;
         ball1.y = groundY;
         ball1.vx = power * Math.cos(rad);
@@ -65,7 +65,7 @@
         ball1.flying = true;
       });
 
-      // 関数の定義
+      // ③関数の定義
       function clearDraw() {
         ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
       }
@@ -130,8 +130,8 @@
         }
       }
 
-      // ④ゲームループ（第5.4節と同じRAF+deltaTime）
-      function game1(timestamp) {
+      // ④ゲームループ（5.2 RAF+deltaTime）
+      function loop(timestamp) {
         if (lastTime === 0) { lastTime = timestamp; }
         const deltaTime = timestamp - lastTime;
         lastTime = timestamp;
@@ -146,9 +146,9 @@
         if (ball1.flying || ball1.y <= groundY) { ballDraw(ball1); }
         pointDraw(point1);
 
-        requestAnimationFrame(game1);
+        requestAnimationFrame(loop);
       }
-      requestAnimationFrame(game1);
+      requestAnimationFrame(loop);
     </script>
   </body>
 </html>

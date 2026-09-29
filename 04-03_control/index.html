@@ -24,14 +24,14 @@
 
       const input1 = document.getElementById("input1");
       const input2 = document.getElementById("input2");
-      input1.addEventListener("change",
-        (e) => { 
-          rect1.dx = Number(input1.value); 
+      input1.addEventListener("input",
+        (e) => {
+          rect1.dx = Number(input1.value);
         }
       );
-      input2.addEventListener("change",
+      input2.addEventListener("input",
         (e) => {
-          rect1.dy = Number(input2.value); 
+          rect1.dy = Number(input2.value);
         }
       );
 

@@ -156,7 +156,7 @@
       }
 
       // ④ゲームループ
-      function game1(timestamp) {
+      function loop(timestamp) {
         if (lastTime === 0) { lastTime = timestamp; }
         const deltaTime = timestamp - lastTime;
         lastTime = timestamp;
@@ -177,9 +177,9 @@
         if (gameOver) { messageDraw("GAME OVER", "red"); }
         if (cleared) { messageDraw("CLEAR!", "lime"); }
 
-        requestAnimationFrame(game1);
+        requestAnimationFrame(loop);
       }
-      requestAnimationFrame(game1);
+      requestAnimationFrame(loop);
     </script>
   </body>
 </html>

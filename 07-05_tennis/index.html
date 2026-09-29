@@ -69,7 +69,7 @@
 
       // CPUがボールを追いかける（本文には無い新規要素：目標へゆっくり近づく）
       function cpuCal(cpu, ball, deltaTime) {
-        const speed = 2.2 * deltaTime / 50;
+        const speed = 1.0 * deltaTime / 50;
         if (cpu.x < ball.x - 5) { cpu.x += speed; }
         else if (cpu.x > ball.x + 5) { cpu.x -= speed; }
       }
@@ -110,7 +110,7 @@
       }
 
       // ④ゲームループ
-      function game1(timestamp) {
+      function loop(timestamp) {
         if (lastTime === 0) { lastTime = timestamp; }
         const deltaTime = timestamp - lastTime;
         lastTime = timestamp;
@@ -124,9 +124,9 @@
         ballDraw(ball1);
         scoreDraw(score1);
 
-        requestAnimationFrame(game1);
+        requestAnimationFrame(loop);
       }
-      requestAnimationFrame(game1);
+      requestAnimationFrame(loop);
     </script>
   </body>
 </html>

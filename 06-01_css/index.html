@@ -91,8 +91,8 @@
         ctx1.fillText(point.value, 0, 400);
       }
 
-      //game1関数（改造後：timestampを受け取る）
-      function game1(timestamp) {
+      // loop関数（改造後：timestampを受け取る）
+      function loop(timestamp) {
         if (lastTime === 0) { // 初回のみ現在時刻を保存
           lastTime = timestamp;
         }
@@ -108,7 +108,7 @@
         rectCal(canvas1, target1, ball1, point1, audio1, deltaTime);
 
         // 次のフレームを予約
-        requestAnimationFrame(game1);
+        requestAnimationFrame(loop);
       }
 
       function rectCal(canvas, target, ball, point, audio, deltaTime) {
@@ -128,8 +128,8 @@
         }
       }
 
-      // game1関数の定義がここまで終わったので、ここで初回のRAFを予約してゲームを開始する
-      requestAnimationFrame(game1);
+      // loop関数の定義がここまで終わったので、ここで初回のRAFを予約してゲームを開始する
+      requestAnimationFrame(loop);
     </script>
   </body>
 </html>
