@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>05-03~05_game2_raf</title>
+    <title>05-02_game2_raf</title>
     <meta name="viewport" content="width=device-width">
     <style>
       canvas {
@@ -19,11 +19,11 @@
       const canvas1 = document.getElementById("canvas1");
       const ctx1 = canvas1.getContext("2d");
 
-      // 効果音
+      // 5.5 効果音
       const audio1 = new Audio();
       audio1.src = "audio1.mp3";
 
-      // 初期値(5-2-3) 画像版
+      // 5.4 画像版
       const target1 = { x: 200, y: 100, w: 50, h: 50, dir: 1, img: new Image() };
       target1.img.src = "target1.png";
 
@@ -33,9 +33,10 @@
       const ball1 = { x: -10, y: -10, w: 5, h: 5, img: new Image() };
       ball1.img.src = "ball1.png";
 
+
       const point1 = { value: 0 };
 
-      //②RAFでゲーム開始★ (34行目)
+      // 5.2 RAFでゲーム開始
       let lastTime = 0; //前回の時刻
       
       // イベント処理定義===================================
@@ -60,7 +61,7 @@
         ctx1.clearRect(0, 0, canvas.width, canvas.height);
       }
 
-      // ⑤画像を描画（ライブラリ game.js に追加済）
+      // 5.4 画像を描画（ライブラリ game.js に追加済）
       function imgDraw(image) {
         ctx1.drawImage(image.img, image.x - image.w / 2, image.y - image.h / 2);
       }
@@ -71,7 +72,7 @@
         ctx1.fillText(point.value, 0, 400);
       }
 
-      //③game1関数（改造後：timestampを受け取る）(39行目)
+      // 5.2 game1関数（改造後：timestampを受け取る）
       function game1(timestamp) {
         if (lastTime === 0) { // 初回のみ現在時刻を保存
           lastTime = timestamp;
@@ -79,7 +80,7 @@
         const deltaTime = timestamp - lastTime; // 経過時間(ms)
         lastTime = timestamp; // 今回の時刻を保存
 
-        //関数の実行 (5-2-4)----------------------
+        // 5.4 関数の実行 ----------------------
         clearDraw(canvas1);
         imgDraw(target1);
         imgDraw(player1);
@@ -108,8 +109,9 @@
         }
       }
 
-      // game1関数の定義がここまで終わったので、ここで初回のRAFを予約してゲームを開始する
+      // 5.2 RAFでゲーム開始
       requestAnimationFrame(game1);
+      
     </script>
   </body>
 </html>

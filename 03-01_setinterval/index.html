@@ -18,12 +18,12 @@
       const canvas1 = document.getElementById("canvas1");
       const ctx1 = canvas1.getContext("2d");
 
-      // ① 初期設定
+      // ①初期設定
       const rect1 = {
         x: 100, y: 100, w: 50, h: 50, color: "indigo", dx: 1, dy: 1
       };
 
-      // ② 関数の実行
+      // ②関数の実行
       setInterval(loop, 50); // タイマ(関数名,ミリ秒)
 
       function loop() {
@@ -35,13 +35,13 @@
         rectCal(rect1);
       }
 
-      // ③ 関数の定義
+      // ③関数の定義
       function rectDraw(rect) {
         ctx1.fillStyle = rect.color;
         ctx1.fillRect(rect.x - rect.w / 2, rect.y - rect.h / 2, rect.w, rect.h);
       }
 
-      // ④ 関数の定義(移動計算)
+      // 移動計算の関数
       function rectCal(rect) {
         rect.x += rect.dx;
         rect.y += rect.dy;

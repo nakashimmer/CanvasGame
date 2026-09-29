@@ -51,7 +51,7 @@
       const point1 = { value: 0 };
       let lastTime = 0;
 
-      // ②イベント処理
+      // イベント処理
       const angleInput = document.getElementById("angleInput");
       const powerInput = document.getElementById("powerInput");
       document.getElementById("fireBtn").addEventListener("click", () => {
@@ -65,7 +65,7 @@
         ball1.flying = true;
       });
 
-      // ③関数の定義
+      // 関数の定義
       function clearDraw() {
         ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
       }

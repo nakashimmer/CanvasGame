@@ -39,7 +39,7 @@
       const canvas1 = document.getElementById("canvas1");
       const ctx1 = canvas1.getContext("2d");
 
-      // 効果音（6.2：複数の効果音を用意）
+      // 6.2 効果音
       const seHit = new Audio("hit.mp3");   // 命中音
       const seMiss = new Audio("miss.mp3");  // ミス音
       const bgm = new Audio("bgm.mp3");   // BGM
@@ -60,19 +60,16 @@
       // RAFでゲーム開始
       let lastTime = 0;
       // イベント処理定義===================================
-      canvas1.addEventListener(
-        "mousedown",
+      canvas1.addEventListener("mousedown",
         (e) => {
           // 6.2：ブラウザの自動再生制限への対処。最初のクリックでBGMを開始する
           if (bgm.paused) { bgm.play(); }
-
           ball1.x = player1.x;
           ball1.y = player1.y;
         }
       );
 
-      canvas1.addEventListener(
-        "mousemove",
+      canvas1.addEventListener("mousemove",
         (e) => {
           const rect = e.target.getBoundingClientRect();
           player1.x = e.clientX - rect.left;

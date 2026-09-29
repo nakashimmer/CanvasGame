@@ -5,6 +5,7 @@
     <title>06-01_css</title>
     <meta name="viewport" content="width=device-width">
     <style>
+      /*6.1*/
       body {
         margin: 0;
         padding: 0;
@@ -39,11 +40,11 @@
       const canvas1 = document.getElementById("canvas1");
       const ctx1 = canvas1.getContext("2d");
 
-      // 効果音
+      // 6.2 効果音
       const audio1 = new Audio();
       audio1.src = "audio1.mp3";
 
-      // 初期値(5-2-3) 画像版
+      // 初期値 画像版
       const target1 = { x: 200, y: 100, w: 50, h: 50, dir: 1, img: new Image() };
       target1.img.src = "target1.png";
 
@@ -79,7 +80,7 @@
         ctx1.clearRect(0, 0, canvas.width, canvas.height);
       }
 
-      // ⑤画像を描画（ライブラリ game.js に追加済）
+      // 画像を描画
       function imgDraw(image) {
         ctx1.drawImage(image.img, image.x - image.w / 2, image.y - image.h / 2);
       }
@@ -90,7 +91,7 @@
         ctx1.fillText(point.value, 0, 400);
       }
 
-      //③game1関数（改造後：timestampを受け取る）(39行目)
+      //game1関数（改造後：timestampを受け取る）
       function game1(timestamp) {
         if (lastTime === 0) { // 初回のみ現在時刻を保存
           lastTime = timestamp;
@@ -98,7 +99,7 @@
         const deltaTime = timestamp - lastTime; // 経過時間(ms)
         lastTime = timestamp; // 今回の時刻を保存
 
-        //関数の実行 (5-2-4)----------------------
+        //関数の実行----------------------
         clearDraw(canvas1);
         imgDraw(target1);
         imgDraw(player1);
@@ -106,12 +107,12 @@
         pointDraw(point1);
         rectCal(canvas1, target1, ball1, point1, audio1, deltaTime);
 
-        // 次のフレームを予約★ (86行目)
+        // 次のフレームを予約
         requestAnimationFrame(game1);
       }
 
       function rectCal(canvas, target, ball, point, audio, deltaTime) {
-        //移動計算 ★ (67行目)
+        //移動計算
         target.x += target.dir * deltaTime / 50;
         ball.y -= 5 * deltaTime / 50;
 
@@ -120,7 +121,7 @@
           target.dir *= -1;
         }
 
-        //得点判定 ★ (76行目)
+        //得点判定
         if (Math.abs(ball.y - 100) < 5 && Math.abs(target.x - ball.x) < 25) {
           point.value++; ball.x = -10; ball.y = -10;
           audio.play();

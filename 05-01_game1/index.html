@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>05-01~02_game1</title>
+    <title>05-01_game1</title>
     <meta name="viewport" content="width=device-width">
     <style>
       canvas {
@@ -15,7 +15,7 @@
   <body>
     <canvas id="canvas1" width="400" height="400"></canvas>
     <script>
-      //① 初期設定===============================
+      // ①初期設定===============================
       // 要素の取得
       const canvas1 = document.getElementById("canvas1");
       const ctx1 = canvas1.getContext("2d");
@@ -26,11 +26,10 @@
       const ball1 = { x: -10, y: -10, w: 5, h: 5, color: "pink" };               //ボール
       const point1 = { value: 0 };                                          //得点
 
-      //②実行====================================
+      // 実行====================================
       setInterval(loop, 50);
 
       function loop() {
-        //関数の実行(5-1-4)
         clearDraw(canvas1);
         rectDraw(target1);
         rectDraw(player1);
@@ -39,7 +38,7 @@
         rectCal(canvas1, target1, ball1, point1);
       }
 
-      //イベント処理定義==================================
+      // ③イベント処理定義==================================
       canvas1.addEventListener(
         "mousedown",
         (e) => {
@@ -56,7 +55,7 @@
         }
       );
 
-      //関数定義===============================
+      // 描画系関数定義===============================
       function clearDraw(canvas) {
         ctx1.clearRect(0, 0, canvas.width, canvas.height);
       }
