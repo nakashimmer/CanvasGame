@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <title>Canvas Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -40,6 +39,7 @@
         <a href="07-04_invader/" class="project-link" data-page="07-04_invader/">07-04_invader</a>
         <a href="07-05_tennis/" class="project-link" data-page="07-05_tennis/">07-05_tennis</a>
         <a href="07-06_breakout/" class="project-link" data-page="07-06_breakout/">07-06_breakout</a>
+        <a href="errata.html" class="project-link" data-page="errata.html">正誤表</a>
       </nav>
 
       <div class="preview-shell">
@@ -47,30 +47,22 @@
       </div>
     </section>
 
-    <section class="panel">
-      <div class="section-header">
-        <h2>Other</h2>
-        <span class="count">Reference</span>
-      </div>
-      <nav class="project-nav compact" aria-label="Reference list">
-        <a href="errata.html" class="project-link" data-page="errata.html">正誤表</a>
-      </nav>
-    </section>
-
-    <script>
-      const frame = document.getElementById('project-frame');
-      const links = document.querySelectorAll('.project-link');
-
-      links.forEach((link) => {
-        link.addEventListener('click', (event) => {
-          event.preventDefault();
-          const nextPage = link.dataset.page;
-          frame.src = nextPage;
-
-          links.forEach((item) => item.classList.toggle('active', item === link));
-        });
-      });
-    </script>
+   
   </div>
+
+  <script>
+    const frame = document.getElementById('project-frame');
+    const links = document.querySelectorAll('.project-link');
+
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const nextPage = link.dataset.page;
+        frame.src = nextPage;
+
+        links.forEach((item) => item.classList.toggle('active', item === link));
+      });
+    });
+  </script>
 </body>
 </html>
