@@ -21,25 +21,30 @@
         <h2>Sample</h2>
         <span class="count">17 projects</span>
       </div>
-      <ul class="link-list">
-        <li><a href="01_canvas/"><span>01_canvas</span></a></li>
-        <li><a href="02_function/"><span>02_function</span></a></li>
-        <li><a href="03-01_setinterval/"><span>03-01_setinterval</span></a></li>
-        <li><a href="03-02_raf/"><span>03-02_raf</span></a></li>
-        <li><a href="04-01_mouse/"><span>04-01_mouse</span></a></li>
-        <li><a href="04-02_touch/"><span>04-02_touch</span></a></li>
-        <li><a href="04-03_control/"><span>04-03_control</span></a></li>
-        <li><a href="05-01_game1/"><span>05-01_game1</span></a></li>
-        <li><a href="05-02_game2_raf/"><span>05-02_game2_raf</span></a></li>
-        <li><a href="06-01_css/"><span>06-01_css</span></a></li>
-        <li><a href="06-02_sound/"><span>06-02_sound</span></a></li>
-        <li><a href="07-01_whackamole/"><span>07-01_whackamole</span></a></li>
-        <li><a href="07-02_maze/"><span>07-02_maze</span></a></li>
-        <li><a href="07-03_parabola/"><span>07-03_parabola</span></a></li>
-        <li><a href="07-04_invader/"><span>07-04_invader</span></a></li>
-        <li><a href="07-05_tennis/"><span>07-05_tennis</span></a></li>
-        <li><a href="07-06_breakout/"><span>07-06_breakout</span></a></li>
-      </ul>
+
+      <nav class="project-nav" aria-label="Sample list">
+        <a href="01_canvas/" class="project-link active" data-page="01_canvas/">01_canvas</a>
+        <a href="02_function/" class="project-link" data-page="02_function/">02_function</a>
+        <a href="03-01_setinterval/" class="project-link" data-page="03-01_setinterval/">03-01_setinterval</a>
+        <a href="03-02_raf/" class="project-link" data-page="03-02_raf/">03-02_raf</a>
+        <a href="04-01_mouse/" class="project-link" data-page="04-01_mouse/">04-01_mouse</a>
+        <a href="04-02_touch/" class="project-link" data-page="04-02_touch/">04-02_touch</a>
+        <a href="04-03_control/" class="project-link" data-page="04-03_control/">04-03_control</a>
+        <a href="05-01_game1/" class="project-link" data-page="05-01_game1/">05-01_game1</a>
+        <a href="05-02_game2_raf/" class="project-link" data-page="05-02_game2_raf/">05-02_game2_raf</a>
+        <a href="06-01_css/" class="project-link" data-page="06-01_css/">06-01_css</a>
+        <a href="06-02_sound/" class="project-link" data-page="06-02_sound/">06-02_sound</a>
+        <a href="07-01_whackamole/" class="project-link" data-page="07-01_whackamole/">07-01_whackamole</a>
+        <a href="07-02_maze/" class="project-link" data-page="07-02_maze/">07-02_maze</a>
+        <a href="07-03_parabola/" class="project-link" data-page="07-03_parabola/">07-03_parabola</a>
+        <a href="07-04_invader/" class="project-link" data-page="07-04_invader/">07-04_invader</a>
+        <a href="07-05_tennis/" class="project-link" data-page="07-05_tennis/">07-05_tennis</a>
+        <a href="07-06_breakout/" class="project-link" data-page="07-06_breakout/">07-06_breakout</a>
+      </nav>
+
+      <div class="preview-shell">
+        <iframe id="project-frame" src="01_canvas/" title="Canvas project preview" loading="lazy"></iframe>
+      </div>
     </section>
 
     <section class="panel">
@@ -47,10 +52,25 @@
         <h2>Other</h2>
         <span class="count">Reference</span>
       </div>
-      <ul class="link-list compact">
-        <li><a href="errata.html"><span>正誤表</span></a></li>
-      </ul>
+      <nav class="project-nav compact" aria-label="Reference list">
+        <a href="errata.html" class="project-link" data-page="errata.html">正誤表</a>
+      </nav>
     </section>
+
+    <script>
+      const frame = document.getElementById('project-frame');
+      const links = document.querySelectorAll('.project-link');
+
+      links.forEach((link) => {
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          const nextPage = link.dataset.page;
+          frame.src = nextPage;
+
+          links.forEach((item) => item.classList.toggle('active', item === link));
+        });
+      });
+    </script>
   </div>
 </body>
 </html>

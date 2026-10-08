@@ -147,61 +147,48 @@ h2 {
 	opacity: 0.9;
 }
 
-.link-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-	gap: 12px;
-}
-
-.link-list a {
+.project-nav {
 	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 12px;
-	width: 100%;
-	padding: 14px 16px;
-	border-radius: 15px;
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	background: linear-gradient(135deg, rgba(16, 22, 38, 0.9), rgba(9, 14, 26, 0.92));
-	color: var(--text);
-	text-decoration: none;
-	font-weight: 700;
-	transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 18px;
 }
 
-.link-list a:hover {
-	transform: translateY(-2px);
-	border-color: rgba(114, 226, 255, 0.35);
-	box-shadow: 0 0 0 1px rgba(114, 226, 255, 0.1), 0 18px 28px rgba(10, 12, 22, 0.34);
-}
-
-.link-list a span:first-child {
+.project-link {
 	display: inline-flex;
 	align-items: center;
-	gap: 10px;
+	justify-content: center;
+	padding: 10px 14px;
+	border-radius: 999px;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	background: rgba(255, 255, 255, 0.02);
+	color: var(--text);
+	text-decoration: none;
+	font-size: 0.8rem;
+	font-weight: 700;
+	transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.link-list a span:first-child::before {
-	content: "";
-	width: 9px;
-	height: 9px;
-	border-radius: 50%;
-	background: linear-gradient(135deg, var(--cyan), var(--purple));
-	box-shadow: 0 0 12px rgba(114, 226, 255, 0.8);
+.project-link:hover,
+.project-link.active {
+	transform: translateY(-1px);
+	border-color: rgba(114, 226, 255, 0.35);
+	background: rgba(114, 226, 255, 0.08);
 }
 
-.link-list a::after {
-	content: "→";
-	font-size: 1.1rem;
-	opacity: 0.8;
-	color: var(--cyan);
+.preview-shell {
+	padding: 12px;
+	border-radius: 20px;
+	border: 1px solid rgba(114, 226, 255, 0.2);
+	background: rgba(8, 12, 20, 0.9);
 }
 
-.compact a {
-	grid-column: span 1;
+#project-frame {
+	width: 100%;
+	height: 780px;
+	border: 0;
+	border-radius: 14px;
+	background: #fff;
 }
 
 @media (max-width: 640px) {
@@ -221,5 +208,9 @@ h2 {
 
 	.panel {
 		padding: 18px 16px;
+	}
+
+	#project-frame {
+		height: 560px;
 	}
 }
