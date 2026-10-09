@@ -26,6 +26,17 @@
 			b {
 				color: red;
 			}
+			pre{
+				background-color: #f5f5f5;
+				border: 1px solid #ccc;
+				padding: 10px;
+				overflow-x: auto;
+			}
+			date{
+				font-size: 0.8em;
+				color: #666;
+				margin-left: 10px;
+			}
 		</style>
 	</head>
 	<body>
@@ -33,13 +44,13 @@
 			<header>
 				<h1>正誤</a></h1>
 				<p>このページは、Canvas Gameの正誤を掲載するためのページです。</p>
-				<p>随時、修正を加えます。(2026/09/29)</p>
+				<p>随時、修正を加えます。</p>
 				<section>
-					<h2>8p 2~5行目</h2>
+					<h2>8p 2~5行目<date>(2026/10/9)</date></h2>
 					<pre><code>// 1.7 文字
 ctx1.fillStyle = "blue";
-ctx1.font = "<b>4</b>0px serif";            // 文字の大きさとフォントを設定
-ctx1.fillText(<b>"Canvas Game", 0, 300</b>);// 文字を描画("文字列",x,y)
+ctx1.font = "<b>4</b>0px serif";               // 文字の大きさとフォントを設定
+ctx1.fillText(<b>"Canvas Game", 0, 300</b>);  // 文字を描画("文字列",x,y)
 </code></pre>
 				</section>
 	</body>
