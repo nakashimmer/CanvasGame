@@ -10,10 +10,22 @@
         margin: 10px auto;
         display: block;
       }
+       p.help {
+        color: #666;
+        font-size: 13px;
+        text-align:center;
+      }
+      #qr {
+        display: block;
+        margin: 0 auto;
+        width: 150px;
+      }
     </style>
   </head>
   <body>
+    <p class="help">スマホで操作してください</p>
     <canvas id="canvas1" width="310" height="320"></canvas>
+    <p><img id="qr" src="touch.png" alt="QRコード"></p>
     <script>
       const canvas1 = document.getElementById("canvas1");
       const ctx1 = canvas1.getContext("2d");
